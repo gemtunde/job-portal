@@ -1,11 +1,21 @@
 "use client";
-import { Button, Form, Radio } from "antd";
+import { Button, Form, Radio, message } from "antd";
+import axios from "axios";
 import Link from "next/link";
-import React from "react";
+import React, { use } from "react";
+import { useRouter } from "next/navigation";
 
 const Register = () => {
-  const onFinish = (values: any) => {
-    console.log("success", values);
+  const router = useRouter();
+  const onFinish = async (values: any) => {
+    // console.log("success", values);
+    try {
+      const response = await axios.post("/api/users/register", values);
+      message.success(response.data.message);
+      router.push("/login");
+    } catch (error: any) {
+      message.error(error.response.data.message || "SOmething went wrong");
+    }
   };
   return (
     <div className="flex justify-center h-screen items-center bg-primary">

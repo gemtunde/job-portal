@@ -26,4 +26,7 @@ To learn more about Next.js, take a look at the following resources:
 - Typescript
 - Nextjs
 - MongoDB
--
+- jsonwebtoken
+- bcryptjs
+- redux react-redux @reduxjs/toolkit
+- axios
