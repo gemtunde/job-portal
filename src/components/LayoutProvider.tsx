@@ -1,10 +1,11 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { ConfigProvider } from "antd";
 import { usePathname } from "next/navigation";
 
 const LayoutProvider = ({ children }: { children: React.ReactNode }) => {
+  const [showSidebar, setShowSidebar] = useState(true);
   const menuItems = [
     {
       name: "Home",
@@ -64,7 +65,19 @@ const LayoutProvider = ({ children }: { children: React.ReactNode }) => {
               <div className="sidebar">
                 <div className="logo">
                   {/* sidebar header */}
-                  <h1>Gemtunde-Jobs</h1>
+                  {showSidebar && <h1>Gem-Tunde</h1>}
+                  {!showSidebar && (
+                    <i
+                      className="ri-menu-2-line"
+                      onClick={() => setShowSidebar(!showSidebar)}
+                    ></i>
+                  )}
+                  {showSidebar && (
+                    <i
+                      className="ri-close-line"
+                      onClick={() => setShowSidebar(!showSidebar)}
+                    ></i>
+                  )}
                 </div>
                 <div className="menu-items">
                   {/* sidebar content */}
@@ -76,19 +89,25 @@ const LayoutProvider = ({ children }: { children: React.ReactNode }) => {
                         className={`menu-item ${
                           isActive ? "active-menu-item" : ""
                         }`}
+                        style={{
+                          justifyContent: showSidebar ? "flex-start" : "center",
+                        }}
                       >
                         <i className={item.icon}></i>
-                        <span>{item.name}</span>
+                        <span>{showSidebar && item.name}</span>
                       </div>
                     );
                   })}
                 </div>
-                <div>
+                <div className="user-info">
                   {/* sidebar footer */}
-                  <p>
-                    <span>Username</span>
-                    <span>Logout</span>
-                  </p>
+                  {showSidebar && (
+                    <div className="flex flex-col">
+                      <span>Username</span>
+                      <span>email</span>
+                    </div>
+                  )}
+                  <i className="ri-logout-box-r-line"></i>
                 </div>
               </div>
               <div className="body">{children}</div>
