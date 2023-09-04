@@ -3,19 +3,25 @@ import { Button, Form, Radio, message } from "antd";
 import Link from "next/link";
 import React from "react";
 import axios from "axios";
-
+import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
+import { SetLoading } from "@/redux/loadersSlice";
 
 const Login = () => {
+  const dispatch = useDispatch();
+
   const router = useRouter();
   const onFinish = async (values: any) => {
     // console.log("success", values);
     try {
+      dispatch(SetLoading(true));
       const response = await axios.post("/api/users/login", values);
       message.success(response.data.message);
       router.push("/");
     } catch (error: any) {
       message.error(error.response.data.message);
+    } finally {
+      dispatch(SetLoading(false));
     }
   };
   return (

@@ -4,17 +4,24 @@ import axios from "axios";
 import Link from "next/link";
 import React, { use } from "react";
 import { useRouter } from "next/navigation";
+import { useDispatch } from "react-redux";
+import { SetLoading } from "@/redux/loadersSlice";
 
 const Register = () => {
+  const dispatch = useDispatch();
+
   const router = useRouter();
   const onFinish = async (values: any) => {
     // console.log("success", values);
     try {
+      dispatch(SetLoading(true));
       const response = await axios.post("/api/users/register", values);
       message.success(response.data.message);
       router.push("/login");
     } catch (error: any) {
       message.error(error.response.data.message || "SOmething went wrong");
+    } finally {
+      dispatch(SetLoading(false));
     }
   };
   return (

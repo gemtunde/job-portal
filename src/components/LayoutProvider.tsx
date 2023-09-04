@@ -6,6 +6,8 @@ import { usePathname } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { setCurrentUser } from "@/redux/usersSlice";
+import Loader from "./Loader";
+import { SetLoading } from "@/redux/loadersSlice";
 
 const LayoutProvider = ({ children }: { children: React.ReactNode }) => {
   const [showSidebar, setShowSidebar] = useState(true);
@@ -40,19 +42,28 @@ const LayoutProvider = ({ children }: { children: React.ReactNode }) => {
   const dispatch = useDispatch();
   //get users from state
   const { currentUser } = useSelector((state: any) => state.users);
-  //currentuser
+
+  //get loading state
+  const { loading } = useSelector((state: any) => state.loaders);
+
+  //  call currentuser
   const getCurrentUser = async () => {
     try {
+      dispatch(SetLoading(true));
       const response = await axios.get("/api/users/currentuser");
       dispatch(setCurrentUser(response.data.data));
       console.log(response.data.data);
     } catch (error: any) {
       message.error(error.response.data.message || "Something went wrong");
+    } finally {
+      dispatch(SetLoading(false));
     }
   };
 
   useEffect(() => {
-    getCurrentUser();
+    if (pathname !== "/login" && pathname !== "/register") {
+      getCurrentUser();
+    }
   }, [pathname]);
 
   return (
@@ -76,6 +87,7 @@ const LayoutProvider = ({ children }: { children: React.ReactNode }) => {
             },
           }}
         >
+          {loading && <Loader />}
           {/* if route/pathname is login, register... do not show layout coz its a public page */}
 
           {pathname === "/login" || pathname === "/register" ? (
