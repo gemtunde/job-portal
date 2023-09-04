@@ -1,8 +1,11 @@
 "use client";
 
-import React, { useState } from "react";
-import { ConfigProvider } from "antd";
+import React, { useState, useEffect } from "react";
+import { ConfigProvider, message } from "antd";
 import { usePathname } from "next/navigation";
+import { useDispatch, useSelector } from "react-redux";
+import axios from "axios";
+import { setCurrentUser } from "@/redux/usersSlice";
 
 const LayoutProvider = ({ children }: { children: React.ReactNode }) => {
   const [showSidebar, setShowSidebar] = useState(true);
@@ -34,6 +37,23 @@ const LayoutProvider = ({ children }: { children: React.ReactNode }) => {
     },
   ];
   const pathname = usePathname();
+  const dispatch = useDispatch();
+  //get users from state
+  const { currentUser } = useSelector((state: any) => state.users);
+  //currentuser
+  const getCurrentUser = async () => {
+    try {
+      const response = await axios.get("/api/users/currentuser");
+      dispatch(setCurrentUser(response.data.data));
+      console.log(response.data.data);
+    } catch (error: any) {
+      message.error(error.response.data.message || "Something went wrong");
+    }
+  };
+
+  useEffect(() => {
+    getCurrentUser();
+  }, [pathname]);
 
   return (
     <html lang="en">
@@ -103,8 +123,8 @@ const LayoutProvider = ({ children }: { children: React.ReactNode }) => {
                   {/* sidebar footer */}
                   {showSidebar && (
                     <div className="flex flex-col">
-                      <span>Username</span>
-                      <span>email</span>
+                      <span>{currentUser?.name}</span>
+                      <span>{currentUser?.email}</span>
                     </div>
                   )}
                   <i className="ri-logout-box-r-line"></i>

@@ -6,6 +6,7 @@ import "./../stylesheets/antdOverride.css";
 import "./../stylesheets/commonClassess.css";
 import "./../stylesheets/layout.css";
 import "./../stylesheets/loader.css";
+import ReduxProvider from "@/components/ReduxProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,5 +20,9 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <LayoutProvider>{children}</LayoutProvider>;
+  return (
+    <ReduxProvider>
+      <LayoutProvider>{children}</LayoutProvider>
+    </ReduxProvider>
+  );
 }
