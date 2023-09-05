@@ -146,6 +146,7 @@ const LayoutProvider = ({ children }: { children: React.ReactNode }) => {
                         style={{
                           justifyContent: showSidebar ? "flex-start" : "center",
                         }}
+                        onClick={() => router.push(item.path)}
                       >
                         <i className={item.icon}></i>
                         <span>{showSidebar && item.name}</span>
