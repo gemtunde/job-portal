@@ -2,12 +2,13 @@
 
 import React, { useState, useEffect } from "react";
 import { ConfigProvider, message } from "antd";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { setCurrentUser } from "@/redux/usersSlice";
 import Loader from "./Loader";
 import { SetLoading } from "@/redux/loadersSlice";
+import { Router } from "next/router";
 
 const LayoutProvider = ({ children }: { children: React.ReactNode }) => {
   const [showSidebar, setShowSidebar] = useState(true);
@@ -38,6 +39,11 @@ const LayoutProvider = ({ children }: { children: React.ReactNode }) => {
       icon: "ri-save-line",
     },
   ];
+
+  //navigation router
+  const router = useRouter();
+
+  //pathname
   const pathname = usePathname();
   const dispatch = useDispatch();
   //get users from state
@@ -65,6 +71,22 @@ const LayoutProvider = ({ children }: { children: React.ReactNode }) => {
       getCurrentUser();
     }
   }, [pathname]);
+
+  //logout
+  const onLogout = async () => {
+    try {
+      dispatch(SetLoading(true));
+      await axios.post("/api/users/logout");
+      dispatch(setCurrentUser(null));
+      message.success("Logout success");
+
+      router.push("/login");
+    } catch (error: any) {
+      message.error(error.response.data.message || "something went wrong");
+    } finally {
+      dispatch(SetLoading(false));
+    }
+  };
 
   return (
     <html lang="en">
@@ -139,7 +161,11 @@ const LayoutProvider = ({ children }: { children: React.ReactNode }) => {
                       <span>{currentUser?.email}</span>
                     </div>
                   )}
-                  <i className="ri-logout-box-r-line"></i>
+                  <i
+                    className="ri-logout-box-r-line"
+                    onClick={onLogout}
+                    style={{ color: " #ff6666" }}
+                  ></i>
                 </div>
               </div>
               <div className="body">{children}</div>

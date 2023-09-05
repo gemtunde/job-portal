@@ -11,6 +11,7 @@ export function middleware(request: NextRequest) {
 
     //token
     const token = request.cookies.get("token");
+    // const token = request.cookies.get("token")?.value;
 
     // token not present in cookies
     if (!token && !isPublicPage) {
