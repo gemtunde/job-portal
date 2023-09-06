@@ -29,13 +29,13 @@ const JobPostForm = () => {
             },
           ]}
         >
-          <input type="text" />
+          <textarea />
         </Form.Item>
       </Col>
       <Col span={12}>
         <Form.Item
           label="Job Type"
-          name="type"
+          name="jobType"
           rules={[
             {
               required: true,
@@ -51,36 +51,90 @@ const JobPostForm = () => {
         </Form.Item>
       </Col>
       <Col span={12}>
-        <Form.Item label="Location" name="location">
+        <Form.Item
+          label="Location"
+          name="location"
+          rules={[
+            {
+              required: true,
+              message: "Please enter your location",
+            },
+          ]}
+        >
           <input type="text" />
         </Form.Item>
       </Col>
       <Col span={12}>
-        <Form.Item label="Experience" name="experience">
+        <Form.Item
+          label="Experience"
+          name="experience"
+          rules={[
+            {
+              required: true,
+              message: "Please enter your experience",
+            },
+          ]}
+        >
           <input type="text" />
         </Form.Item>
       </Col>
       <Col span={12}>
-        <Form.Item label="Work Mode" name="workMode">
+        <Form.Item
+          label="Work Mode"
+          name="workMode"
+          rules={[
+            {
+              required: true,
+              message: "Please select a work mode",
+            },
+          ]}
+        >
           <select>
-            <option value="fulltime"> Remote</option>
-            <option value="partime"> Office</option>
-            <option value="contract"> Hybrid</option>
+            <option value="remote"> Remote</option>
+            <option value="office"> Office</option>
+            <option value="hybrid"> Hybrid</option>
           </select>
         </Form.Item>
       </Col>
       <Col span={12}>
-        <Form.Item label="Salary From" name="salaryFrom">
-          <input type="number" />
+        <Form.Item
+          label="Salary From"
+          name="salaryFrom"
+          rules={[
+            {
+              required: true,
+              message: "Please enter your salary range",
+            },
+          ]}
+        >
+          <input type="text" />
         </Form.Item>
       </Col>
       <Col span={12}>
-        <Form.Item label="Salary To" name="salaryTo">
-          <input type="number" />
+        <Form.Item
+          label="Salary To"
+          name="salaryTo"
+          rules={[
+            {
+              required: true,
+              message: "Please select your salary range",
+            },
+          ]}
+        >
+          <input type="text" />
         </Form.Item>
       </Col>
       <Col span={24}>
-        <Form.Item label="Notice Period" name="noticePeriod">
+        <Form.Item
+          label="Notice Period"
+          name="noticePeriod"
+          rules={[
+            {
+              required: true,
+              message: "Please enter your notice period",
+            },
+          ]}
+        >
           <input type="text" placeholder="2 weeks" />
         </Form.Item>
       </Col>
