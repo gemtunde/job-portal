@@ -8,37 +8,15 @@ import axios from "axios";
 import { setCurrentUser } from "@/redux/usersSlice";
 import Loader from "./Loader";
 import { SetLoading } from "@/redux/loadersSlice";
-import { Router } from "next/router";
+//import { Router } from "next/router";
+import { employeeMenuItems, employerMenuItems } from "@/constants";
 
 const LayoutProvider = ({ children }: { children: React.ReactNode }) => {
   const [showSidebar, setShowSidebar] = useState(true);
-  const menuItems = [
-    {
-      name: "Home",
-      path: "/",
-      icon: "ri-home-7-line",
-    },
-    {
-      name: "Profile",
-      path: "/profile",
-      icon: "ri-shield-user-line",
-    },
-    {
-      name: "Applications",
-      path: "/applications",
-      icon: "ri-file-list-2-line",
-    },
-    {
-      name: "Settings",
-      path: "/settings",
-      icon: "ri-settings-2-line",
-    },
-    {
-      name: "Saved",
-      path: "/saved",
-      icon: "ri-save-line",
-    },
-  ];
+
+  //sidebar menu-items
+
+  const [menuItems, setMenuItems] = useState(employeeMenuItems);
 
   //navigation router
   const router = useRouter();
@@ -57,6 +35,14 @@ const LayoutProvider = ({ children }: { children: React.ReactNode }) => {
     try {
       dispatch(SetLoading(true));
       const response = await axios.get("/api/users/currentuser");
+      const isEmployer = response.data.data.userType === "employer";
+      if (isEmployer) {
+        // const tempIems: any = menuItems;
+        // tempIems[2].name = "Posted Jobs";
+        // tempIems[2].path = "/jobs";
+        setMenuItems(employerMenuItems);
+      }
+
       dispatch(setCurrentUser(response.data.data));
       console.log(response.data.data);
     } catch (error: any) {
