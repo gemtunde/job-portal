@@ -37,7 +37,7 @@ export const employerMenuItems = [
     icon: "ri-shield-user-line",
   },
   {
-    name: "Jobs",
+    name: "Posted Jobs",
     path: "/jobs",
     icon: "ri-file-list-2-line",
   },

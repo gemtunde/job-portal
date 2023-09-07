@@ -1,16 +1,19 @@
 "use client";
 import PageTitle from "@/components/PageTitle";
-import { Button, Table, message } from "antd";
+import { Button, Table, Tooltip, message } from "antd";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { SetLoading } from "@/redux/loadersSlice";
 import moment from "moment";
+import Applications from "@/components/Applications";
 
 const Jobs = () => {
   const router = useRouter();
   const [jobs, setJobs] = useState([]);
+  const [selectedjob, setSelectedJob] = useState<any>({});
+  const [showApplications, setShowApplications] = useState<boolean>(false);
   const { currentUser } = useSelector((state: any) => state.users);
   //set loading
   const dispatch = useDispatch();
@@ -56,14 +59,28 @@ const Jobs = () => {
       dataIndex: "actions",
       render: (text: any, record: any) => (
         <div className="flex gap-3">
-          <i
-            className="ri-delete-bin-line"
-            onClick={() => onDelete(record._id)}
-          ></i>
-          <i
-            className="ri-pencil-line"
-            onClick={() => router.push(`/jobs/edit/${record._id}`)}
-          ></i>
+          <Tooltip title="Delete">
+            {" "}
+            <i
+              className="ri-delete-bin-line"
+              onClick={() => onDelete(record._id)}
+            ></i>
+          </Tooltip>
+          <Tooltip title="Edit">
+            <i
+              className="ri-pencil-line"
+              onClick={() => router.push(`/jobs/edit/${record._id}`)}
+            ></i>
+          </Tooltip>
+          <Tooltip title="View Applications">
+            <i
+              className="ri-file-list-3-line"
+              onClick={() => {
+                setSelectedJob(record);
+                setShowApplications(true);
+              }}
+            ></i>
+          </Tooltip>
         </div>
       ),
     },
@@ -83,6 +100,13 @@ const Jobs = () => {
       <div className="my-2">
         <Table columns={columns} dataSource={jobs} />
       </div>
+      {showApplications && (
+        <Applications
+          selectedJob={selectedjob}
+          setShowApplications={setShowApplications}
+          showApplications={showApplications}
+        />
+      )}
     </div>
   );
 };

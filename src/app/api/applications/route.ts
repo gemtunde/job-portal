@@ -25,27 +25,34 @@ export async function GET(request: NextRequest) {
   try {
     validateJWT(request);
 
-    //fetch query using string/search params
+    // fetch query string parameters
     const { searchParams } = new URL(request.url);
     const user = searchParams.get("user");
     const job = searchParams.get("job");
 
-    const filterObject: any = {};
+    const filtersObject: any = {};
     if (user) {
-      filterObject["user"] = user;
-    }
-    if (job) {
-      filterObject["job"] = job;
+      filtersObject["user"] = user;
     }
 
-    const applications = await Application.find(filterObject)
+    if (job) {
+      filtersObject["job"] = job;
+    }
+
+    const applications = await Application.find(filtersObject)
       .populate("user")
-      .populate("job");
+      .populate({
+        path: "job",
+        populate: {
+          path: "user",
+        },
+      });
     return NextResponse.json({
-      message: "job application fetched successfully",
+      message: "Jobs fetched successfully",
       data: applications,
     });
   } catch (error: any) {
+    console.log(error);
     return NextResponse.json({ message: error.message }, { status: 500 });
   }
 }
