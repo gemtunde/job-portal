@@ -29,7 +29,12 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const user = searchParams.get("user");
 
-    const jobs = await Job.find({ user });
+    const filterObject: any = {};
+    if (user) {
+      filterObject["user"] = user;
+    }
+
+    const jobs = await Job.find(filterObject).populate("user");
     return NextResponse.json({
       message: "jobs fetched successfully",
       data: jobs,

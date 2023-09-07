@@ -1,73 +1,69 @@
-//server side rendering
-//rendering a server component
-
-//import { Button, Space, message } from "antd";
+"use client";
+import React, { useEffect, useState } from "react";
+import { SetLoading } from "@/redux/loadersSlice";
+import { Button, Col, Divider, Row, Space, message } from "antd";
 import axios from "axios";
-import { cookies } from "next/headers";
+import { useDispatch } from "react-redux";
+import { useRouter } from "next/navigation";
 
-//get user from server
-export async function getUser() {
-  try {
-    const token = cookies().get("token");
-    console.log("my token is ", token);
-    const response = await axios.get(
-      //`${process.env.BASE_URL}/api/users/currentuser`,
-      "http://localhost:3000/api/users/currentuser",
-      {
-        headers: {
-          Cookie: `token=${token?.value}`,
-        },
-      }
-    );
-    //  return response.data.data;
-    return response.data.data;
-  } catch (error: any) {
-    console.error(error);
-  }
-}
-export default async function Home() {
-  //get current users
-  const user: any = await getUser();
+function Home() {
+  //store response in state
+  const [jobs, setJobs] = useState([]);
 
+  //navigation
+  const router = useRouter();
+
+  const dispatch = useDispatch();
+  const fetchJobs = async () => {
+    try {
+      dispatch(SetLoading(true));
+      const response = await axios.get("/api/jobs");
+      setJobs(response.data.data);
+    } catch (error: any) {
+      message.error(error.message);
+    } finally {
+      dispatch(SetLoading(false));
+    }
+  };
+
+  useEffect(() => {
+    fetchJobs();
+  }, []);
   return (
     <div>
       <h2>Job portal</h2>
-      <p>user name : {user && user.name}</p>
+      <Row gutter={[16, 16]} className="gap-3">
+        {jobs.map((job: any, index) => (
+          <Col
+            span={7}
+            className="card flex flex-col gap-2 cursor-pointer"
+            key={index}
+            onClick={() => router.push(`/jobsinfo/${job._id}`)}
+          >
+            <h1 className="text-md">{job.title}</h1>
+            <Divider />
+            <div className="flex justify-between">
+              <span>Company</span>
+              <span>{job.user.name}</span>
+            </div>
+            <div className="flex justify-between">
+              <span>Location</span>
+              <span>{job.location}</span>
+            </div>
+            <div className="flex justify-between">
+              <span>Salary Range</span>
+              <span>
+                N{job.salaryFrom} - N{job.salaryTo}{" "}
+              </span>
+            </div>
+            <div className="flex justify-between">
+              <span>Work Mode</span>
+              <span>{job.workMode}</span>
+            </div>
+          </Col>
+        ))}
+      </Row>
     </div>
   );
 }
-
-//use this method for client side rendering or rendering a client component
-
-// "use client";
-// import { Button, Space, message } from "antd";
-// import { useEffect, useState } from "react";
-// import axios from "axios";
-
-// export default function Home() {
-//   const [user, setUser] = useState<any>([]);
-
-//   //get current users
-//   const getUser = async () => {
-//     try {
-//       const response = await axios.get("/api/users/currentuser");
-//       setUser(response.data.data);
-//     } catch (error: any) {
-//       message.error(error.response.data.message);
-//     }
-//   };
-//   useEffect(() => {
-//     getUser();
-//   }, []);
-
-//   return (
-//     <div>
-//       <h2>Job portal</h2>
-//       <p>user name : {user && user.name}</p>
-
-//       <Button type="primary" onClick={() => confirm("are you sure")}>
-//         Primary Button
-//       </Button>
-//     </div>
-//   );
-// }
+export default Home;
