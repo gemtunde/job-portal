@@ -46,7 +46,9 @@ const LayoutProvider = ({ children }: { children: React.ReactNode }) => {
       dispatch(setCurrentUser(response.data.data));
       console.log(response.data.data);
     } catch (error: any) {
-      message.error(error.response.data.message || "Something went wrong");
+      router.push("/login");
+      message.error(error.message || "Something went wrong");
+      message.error("Please login again");
     } finally {
       dispatch(SetLoading(false));
     }
