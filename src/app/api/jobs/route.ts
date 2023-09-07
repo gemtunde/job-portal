@@ -23,7 +23,13 @@ export async function POST(request: NextRequest) {
 
 export async function GET(request: NextRequest) {
   try {
-    const jobs = await Job.find();
+    validateJWT(request);
+
+    //fetch query using string/search params
+    const { searchParams } = new URL(request.url);
+    const user = searchParams.get("user");
+
+    const jobs = await Job.find({ user });
     return NextResponse.json({
       message: "jobs fetched successfully",
       data: jobs,

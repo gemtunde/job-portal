@@ -37,3 +37,16 @@ export async function GET(request: NextRequest, { params }: any) {
     return NextResponse.json({ message: error.message }, { status: 500 });
   }
 }
+//Delete single job by id
+export async function DELETE(request: NextRequest, { params }: any) {
+  try {
+    validateJWT(request);
+    const job = await Job.findByIdAndDelete(params.jobid);
+    return NextResponse.json({
+      message: "job deleted successfully",
+      data: job,
+    });
+  } catch (error: any) {
+    return NextResponse.json({ message: error.message }, { status: 500 });
+  }
+}

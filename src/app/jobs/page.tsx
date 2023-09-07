@@ -3,7 +3,7 @@ import PageTitle from "@/components/PageTitle";
 import { Button, Table, message } from "antd";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { SetLoading } from "@/redux/loadersSlice";
 import moment from "moment";
@@ -11,15 +11,28 @@ import moment from "moment";
 const Jobs = () => {
   const router = useRouter();
   const [jobs, setJobs] = useState([]);
-
+  const { currentUser } = useSelector((state: any) => state.users);
   //set loading
   const dispatch = useDispatch();
   //fetch-jobs
   const fetchJobs = async () => {
     try {
       dispatch(SetLoading(true));
-      const response = await axios.get("/api/jobs");
+      const response = await axios.get(`/api/jobs?user=${currentUser._id}`);
       setJobs(response.data.data);
+    } catch (error: any) {
+      message.error(error.message);
+    } finally {
+      dispatch(SetLoading(false));
+    }
+  };
+  //delete job
+  const onDelete = async (jobid: any) => {
+    try {
+      dispatch(SetLoading(true));
+      const response = await axios.delete(`/api/jobs/${jobid}`);
+      message.success(response.data.message);
+      fetchJobs();
     } catch (error: any) {
       message.error(error.response.data.message);
     } finally {
@@ -43,7 +56,10 @@ const Jobs = () => {
       dataIndex: "actions",
       render: (text: any, record: any) => (
         <div className="flex gap-3">
-          <i className="ri-delete-bin-line"></i>
+          <i
+            className="ri-delete-bin-line"
+            onClick={() => onDelete(record._id)}
+          ></i>
           <i
             className="ri-pencil-line"
             onClick={() => router.push(`/jobs/edit/${record._id}`)}
