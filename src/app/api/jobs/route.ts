@@ -28,10 +28,19 @@ export async function GET(request: NextRequest) {
     //fetch query using string/search params
     const { searchParams } = new URL(request.url);
     const user = searchParams.get("user");
+    const searchText = searchParams.get("searchText");
+    const location = searchParams.get("location");
 
     const filterObject: any = {};
     if (user) {
       filterObject["user"] = user;
+    }
+
+    if (searchText) {
+      filterObject["title"] = { $regex: searchText, $options: "i" };
+    }
+    if (location) {
+      filterObject["location"] = { $regex: location, $options: "i" };
     }
 
     const jobs = await Job.find(filterObject).populate("user");

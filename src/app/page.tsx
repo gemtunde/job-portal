@@ -5,8 +5,14 @@ import { Button, Col, Divider, Row, Space, message } from "antd";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
+import Filters from "@/components/Filters";
 
 function Home() {
+  //filters
+  const [filters, setFilters] = useState({
+    searchText: "",
+    location: "",
+  });
   //store response in state
   const [jobs, setJobs] = useState([]);
 
@@ -17,7 +23,7 @@ function Home() {
   const fetchJobs = async () => {
     try {
       dispatch(SetLoading(true));
-      const response = await axios.get("/api/jobs");
+      const response = await axios.get("/api/jobs", { params: filters });
       setJobs(response.data.data);
     } catch (error: any) {
       message.error(error.message);
@@ -32,6 +38,7 @@ function Home() {
   return (
     <div>
       <h2>Job portal</h2>
+      <Filters filters={filters} setFilters={setFilters} getData={fetchJobs} />
       <Row gutter={[16, 16]} className="gap-3">
         {jobs.map((job: any, index) => (
           <Col
