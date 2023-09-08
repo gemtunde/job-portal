@@ -28,7 +28,7 @@ export async function PUT(request: NextRequest, { params }: any) {
 export async function GET(request: NextRequest, { params }: any) {
   try {
     validateJWT(request);
-    const job = await Job.findById(params.jobid);
+    const job = await Job.findById(params.jobid).populate("user");
     return NextResponse.json({
       message: "job fetched successfully",
       data: job,

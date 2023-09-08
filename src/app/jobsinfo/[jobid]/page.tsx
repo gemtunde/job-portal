@@ -120,6 +120,12 @@ const JobInfo = () => {
                 Cancel
               </Button>
               <Button
+                onClick={() => router.push(`/userinfo/${jobData.user._id}`)}
+                type="default"
+              >
+                View Company Info
+              </Button>
+              <Button
                 onClick={() => onApply()}
                 type="primary"
                 disabled={
