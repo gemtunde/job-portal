@@ -103,62 +103,71 @@ const LayoutProvider = ({ children }: { children: React.ReactNode }) => {
           {pathname === "/login" || pathname === "/register" ? (
             <div>{children}</div>
           ) : (
-            <div className="layout-parent">
-              <div className="sidebar">
-                <div className="logo">
-                  {/* sidebar header */}
-                  {showSidebar && <h1>Gem-Tunde</h1>}
-                  {!showSidebar && (
-                    <i
-                      className="ri-menu-2-line"
-                      onClick={() => setShowSidebar(!showSidebar)}
-                    ></i>
-                  )}
-                  {showSidebar && (
-                    <i
-                      className="ri-close-line"
-                      onClick={() => setShowSidebar(!showSidebar)}
-                    ></i>
-                  )}
-                </div>
-                <div className="menu-items">
-                  {/* sidebar content */}
-                  {menuItems.map((item, index) => {
-                    const isActive = pathname === item.path;
-                    return (
-                      <div
-                        key={index}
-                        className={`menu-item ${
-                          isActive ? "active-menu-item" : ""
-                        }`}
-                        style={{
-                          justifyContent: showSidebar ? "flex-start" : "center",
-                        }}
-                        onClick={() => router.push(item.path)}
-                      >
-                        <i className={item.icon}></i>
-                        <span>{showSidebar && item.name}</span>
+            currentUser && (
+              <div className="layout-parent">
+                <div className="sidebar">
+                  <div className="logo">
+                    {/* sidebar header */}
+                    {showSidebar && <h1>Gem-Tunde</h1>}
+                    {!showSidebar && (
+                      <i
+                        className="ri-menu-2-line"
+                        onClick={() => setShowSidebar(!showSidebar)}
+                      ></i>
+                    )}
+                    {showSidebar && (
+                      <i
+                        className="ri-close-line"
+                        onClick={() => setShowSidebar(!showSidebar)}
+                      ></i>
+                    )}
+                  </div>
+                  <div className="menu-items">
+                    {/* sidebar content */}
+                    {menuItems.map((item, index) => {
+                      const isActive = pathname === item.path;
+                      return (
+                        <div
+                          key={index}
+                          className={`menu-item ${
+                            isActive ? "active-menu-item" : ""
+                          }`}
+                          style={{
+                            justifyContent: showSidebar
+                              ? "flex-start"
+                              : "center",
+                          }}
+                          onClick={() => router.push(item.path)}
+                        >
+                          <i className={item.icon}></i>
+                          <span>{showSidebar && item.name}</span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                  <div className="user-info">
+                    {/* sidebar footer */}
+                    {showSidebar && (
+                      <div className="flex flex-col">
+                        <span>{currentUser?.name}</span>
+                        <span>{currentUser?.email}</span>
+                        <span>
+                          {currentUser?.userType === "employer"
+                            ? "Admin"
+                            : "Applicant"}
+                        </span>
                       </div>
-                    );
-                  })}
+                    )}
+                    <i
+                      className="ri-logout-box-r-line"
+                      onClick={onLogout}
+                      style={{ color: " #ff6666" }}
+                    ></i>
+                  </div>
                 </div>
-                <div className="user-info">
-                  {/* sidebar footer */}
-                  {showSidebar && (
-                    <div className="flex flex-col">
-                      <span>{currentUser?.name}</span>
-                      <span>{currentUser?.email}</span>
-                    </div>
-                  )}
-                  <i
-                    className="ri-logout-box-r-line"
-                    onClick={onLogout}
-                    style={{ color: " #ff6666" }}
-                  ></i>
-                </div>
+                <div className="body">{children}</div>
               </div>
-              <div className="body">{children}</div>
-            </div>
+            )
           )}
         </ConfigProvider>
       </body>

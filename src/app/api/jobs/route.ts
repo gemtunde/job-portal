@@ -36,10 +36,10 @@ export async function GET(request: NextRequest) {
       filterObject["user"] = user;
     }
 
-    if (searchText) {
+    if (searchText && searchText !== "") {
       filterObject["title"] = { $regex: searchText, $options: "i" };
     }
-    if (location) {
+    if (location && location !== "") {
       filterObject["location"] = { $regex: location, $options: "i" };
     }
 
