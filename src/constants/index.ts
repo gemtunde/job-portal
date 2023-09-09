@@ -16,12 +16,12 @@ export const employeeMenuItems = [
   },
   {
     name: "Settings",
-    path: "/settings",
+    path: "",
     icon: "ri-settings-2-line",
   },
   {
     name: "Saved",
-    path: "/saved",
+    path: "",
     icon: "ri-save-line",
   },
 ];
@@ -43,17 +43,17 @@ export const employerMenuItems = [
   },
   {
     name: "Resume Bank",
-    path: "/resume",
+    path: "",
     icon: "ri-file-list-2-line",
   },
   {
     name: "Settings",
-    path: "/settings",
+    path: "",
     icon: "ri-settings-2-line",
   },
   {
     name: "Saved",
-    path: "/saved",
+    path: "",
     icon: "ri-save-line",
   },
 ];
